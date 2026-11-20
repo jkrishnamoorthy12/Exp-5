@@ -41,14 +41,94 @@ ry slightly with changes to the train-test split,
 
 
 ## Program
+```python
+import numpy as np
 
+import matplotlib.pyplot as plt
 
+from sklearn.datasets import load_digits
+
+from sklearn.model_selection import train_test_split
+
+from sklearn.preprocessing import StandardScaler
+
+from sklearn.neural_network import MLPClassifier
+
+from sklearn.metrics import accuracy_score,classification_report
+
+# Load digits dataset
+
+digits = load_digits()
+
+X = digits.data
+
+y = digits.target
+
+# Split and scale
+
+X_train, X_test, y_train, y_test = train_test_split(X, y,test_size=0.25, random_state=42, stratify=y)
+
+scaler = StandardScaler()
+
+X_train_s = scaler.fit_transform(X_train)
+
+X_test_s = scaler.transform(X_test)
+mlp = MLPClassifier(hidden_layer_sizes=(64,), activation='relu',
+
+solver='adam', max_iter=300, random_state=42)
+
+mlp.fit(X_train_s, y_train)
+
+# Evaluate
+
+y_pred=mlp.predict(X_test_s)
+
+acc = accuracy_score(y_test, y_pred)
+
+print("MLP Test Accuracy:", acc)
+
+print(classification_report(y_test, y_pred))
+
+# Plot loss curve
+
+plt.figure(figsize=(6,4))
+
+plt.plot(mlp.loss_curve_)
+
+plt.title('MLP Loss Curve')
+
+plt.xlabel('Iterations')
+
+plt.ylabel('Loss')
+
+plt.show()
+```
 
 
 
 ## output
+```text
+ MLP Test Accuracy: 0.98
+              precision    recall  f1-score   support
 
+           0       0.98      0.98      0.98        45
+           1       0.96      0.98      0.97        46
+           2       0.96      1.00      0.98        44
+           3       1.00      1.00      1.00        46
+           4       0.98      0.98      0.98        45
+           5       1.00      0.96      0.98        46
+           6       1.00      1.00      1.00        45
+           7       0.98      1.00      0.99        45
+           8       1.00      0.91      0.95        43
+           9       0.96      1.00      0.98        45
+
+    accuracy                           0.98       450
+   macro avg       0.98      0.98      0.98       450
+weighted avg       0.98      0.98      0.98       450
+
+
+```
 
 
 ## Result
-
+Thus, the Multilayer Perceptron (MLP) classification model was successfully implemented using Python. The model achieved 98% accuracy on the test dataset, demonstrating excellent classification performance.
